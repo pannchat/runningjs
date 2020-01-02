@@ -31,4 +31,4 @@ function change_x( x ){
 
 let x = {a:1};
 change_x(x);
-console.log(x);
+console.log(x); /// { a: 123 }
