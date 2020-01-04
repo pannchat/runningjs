@@ -15,7 +15,11 @@ a === b; //false 객체는 항상 다름
 a !== b; //true
 a == b; //false; 권장하지 않음
 a != b; //true 권장하지 않음.
-
+/*
+숫자를 비교할때 염두 해야 할 것.
+특별한 숫자형 값 NaN은 자신포함 그 무엇과도 같지 않다.(==, !=, ===, !==)
+NaN의 판별은 Number.isNaN() 또는 isNaN()을 사용.
+*/
 ///console.log()
 console.log(NaN === NaN);       // false
 console.log(Number.NaN === NaN); // false
