@@ -12,7 +12,7 @@ console.log( sentence );
 var sentence = [ 'a', 'b', 'c', 'd' ];
 console.log( sentence.join(' ') );
 /*
-문자열 분할옞[]
+문자열 분할예제
 <script>
 var jbString = 'abc,def,ghi';
 var jbSplit = jbString.split( ',', 2 );
