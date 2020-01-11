@@ -66,7 +66,7 @@ for[initialization];[condition]; [final-expresstion])
 	statement
 ```
 
-이후 내용도 개노잼이니 건너 뛰기로 했다
+이후 내용도 중복되는 내용이 많아 생략
 
 # 연산자
 연산자도 대부분 생략하고
@@ -221,4 +221,21 @@ NOT은 단순히 피연산자를 반대로 바꿈.
 
 두 번째 피연산자에 부수 효과( side effect )가 있다 하더라도 단축 평가를 거치면 그 효과는 일어나지 않기 때문이다. 부수효과는 보통 부정적인 의미로 쓰이지만 항상 그런 건 아니다. 결과가 의도적이고 명확하다면 나쁘게 평가할 이유는 없다.
 
-논리 연산자들은 왼쪽->오른쪽 순으로 실행됨. 이 연산자들은 결과를 얻게 되는 순간 단축 평가(즉, 평가의 중단)를 시행. false && 표현식 -> 이미 false발견 true || 표현식 -> 이미 true 그러나 그 결과값은 (반드시 true 또는 false가 아니라) 평가를 중단하게 된 계기가 된 값을 리턴한다.
+```javascript 
+const skipIt = true;
+let x = 0;
+const result = skipIt || x++ ;
+```
+위의 예제 3번째 행의 결과는 result에 저장된다. 첫 번째 피연산자가 skipIt이 true 이므로 result에 true가 저장된다. 이 과정에서도 단축 평가가 일어나므로 증가 연산자에 해당하는 표현식은 실행되지 않고 x의 값은 그대로 0 이다. skipIt을 false로 바꾸면 논리 연산자의 두 피연산자를 모두 평가해야 하고, 따라서 x는 증가함.  여기서는 증가연산이 부수 효과임.
+
+# 피연산자가 불리언이 아닐때 논리 연산자가 동작하는 방법
+불리언 피연산자를 사용하면 논리 연산자는 항상 불리언을 반환한다.
+피연산자가 불리언이 아니라면, 결과를 결정한 값이 반환된다.
+
+![](FDE31C76-E611-4DD7-A521-F07E3C6E476E.png)
+
+논리연산자의 동작을 활용하는 간단한 팁
+```javascript
+const options = suppliedOptions || {name : “Default”};
+```
+객체가 빈 객체라도 항상 참 같은 값으로 평가됨. 따라서 suppliedOptions가 객체이면 options는 suppliedOptions를 가리키게 된다. 옵션이 죄공되지 않으면, 즉 suppliedOptions가 null이나 undefined라면 options는 기본값을 가지게 된다.
