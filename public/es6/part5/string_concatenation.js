@@ -21,3 +21,15 @@ for ( var i in jbSplit ) {
 }
 </script>
 */
+let x = 0, y = 10, z;
+// z = (x++, y++);
+z2 = x++, y++;
+console.log(z);
+console.log(z2);
+
+const obj = { b:2, c:3, d:4 }; //객체 선언
+const {a,b,c} = obj;
+console.log(a);
+console.log(b);
+console.log(c);
+console.log(d);

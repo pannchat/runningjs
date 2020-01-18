@@ -239,3 +239,70 @@ const result = skipIt || x++ ;
 const options = suppliedOptions || {name : “Default”};
 ```
 객체가 빈 객체라도 항상 참 같은 값으로 평가됨. 따라서 suppliedOptions가 객체이면 options는 suppliedOptions를 가리키게 된다. 옵션이 죄공되지 않으면, 즉 suppliedOptions가 null이나 undefined라면 options는 기본값을 가지게 된다.
+
+# 조건 연산자
+조 연산자는 javascript의 유일한 삼항연산자임.
+사용은 C언어의 삼항연산자와 같음
+```javascript
+const doIt = false
+const result = doIt ? “Did it” : “DId’nt it”
+```
+
+# 쉼표 연산자
+쉼표 연산자는 표현식을 결합하여 두 표현식을 평가한 후, 두 번째 표현식의 결과를 반환한다. 표현식 하나 이상 실행해야 하지만 값으로 필요한 것은 마지막 표현식의 결과뿐일 때 쉼표 연산자를 유용하게 쓸 수 있다.
+
+쉼표 연산자는 표현식을 결합하여 두 표현식을 평가한 후, 두 번째 표현식의 결과를 반환한다. 표현식을 하나 이상 실행해야 하지만 필요한것은 마지막 표현식의 결과 뿐일 때 쉼표 연산자를 유용하게 쓸 수 있다.
+```javascript
+let x = 0, y = 10, z;
+z = (x++, y++);
+```
+예제 실행시 x와 y둘다 1증가하지만 z의 값은 10임
+즉 y++가 반환하는 값임. 쉼표 연산자는 우선순위가 가장 낮기때문에 괄호를 사용했고 괄호를 사용하지 않았다면 Z는 0이저장되고 이후 y가 1증가
+
+# 할당 연산자
+할당 연산자는 변수에 값을 할당함. 등호의 왼쪽에 있는 것(l-value) 반드시 변수나 프로퍼티, 배열 요소중 하나여야함. 즉, 표현식의 좌변에 있는 것은 반드시 같은 값을 저장할 수 있는 것이어야 함.
+[image:57227F12-6BC9-4AA2-B12E-3D9AD3AA4703-270-00002D6E8B6D08AB/carbon.png]
+결과
+```
+Number less than 10 : 3.
+Number less than 10 : 5.
+Number greater than 10 found: 15.
+2 numbers remain
+```
+
+
+# 해체 할당(destructuring assignment)
+ES6에서 새로 도입한 해체 할당은 객체나 배열을 변수로 해체할 수 있다.
+```javascript
+const obj = { b:2, c:3, d:4 }; //객체 선언
+const {a,b,c} = obj; // 해체할당
+console.log(a);	//undefined
+console.log(b);	//2
+console.log(c);	//3
+console.log(d);	//ReferenceError: d is not defined
+```
+
+ 객체를 해체할 때는 반드시 변수의 이름과 객체의 프로퍼티 이름이 일치해야함.
+프로퍼티 이름이 유효한 식별자인 프로퍼티만 해체 후 할당된다. 이 예제에서 obj에 a 프로퍼티가 없으므로 a는 undefined를 할당 받는다. 해체 할당에 d라는 프로퍼티가 없으므로 선언자체가 안됨.
+객체해체는 할당만으로 이뤄질 수도 있지만 그렇게하려면 괄호를 써야함. 괄호를 쓰지 않으면 자바스크립트는 표현식 좌변을 블록으로 해석함.
+```javascript
+const obj = { b:2, c:3, d:4 };
+let a, b, c;
+{a,b,c} = obj; //에러
+({a, b, c} = obj); //동작
+```
+
+```javascript
+[a, b, …rest] = [10, 20, 30, 40, 50];
+console.log(a); // 10
+console.log(b); // 20
+console.log(rest); // [30, 40, 50]
+```
+남는 배열요소는 모두 버려진다. 확장 연산자(spread operator) … 을 사용하면 남은 요소를 새 배열 에 할당할 수 있음.
+```javascript
+var a= 5, b = 10;
+[a, b] = [b, a];
+console.log(a); // 10
+console.log(b); // 5
+```
+x 와 y는 배열의 처음 두 요소를 받고, 변수 rest에는 나머지가 저장됨. 배열 해체를 활용하면 변수의 값을 서로 바꿀 수 있음. 해체를 사용하지 않으면 임시 변수가 필수.
