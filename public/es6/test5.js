@@ -23,3 +23,4 @@ const arr = ['a','b','c'];
 console.log(arr.length);
 console.log(arr[0]); //배열의 첫번째 요소
 console.log(arr[arr.length -1]); // 배열의 마지막에서 두번째 요소
+
