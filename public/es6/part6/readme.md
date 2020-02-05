@@ -132,7 +132,7 @@ f를 호출한 다음:o.message="f에서 수정함"
 f를 호출하면 둘은 같은 객체를 가리키지만 f내부에서 o에 할당한 객체는 새로운, 전혀다른 객체임. 
 함수 바깥의 o는 여전히 원래 객체를 가리키고 있음.
 
-> 컴퓨터 과학에서는 자바스크립트의 원시값을 값 타입 ( value type) 이라고 말함. 원시 값을 전달할 때 값이 복사되기 때문. 객체는 참조타입(reference type)이라고 부름. 객체를 전달할 때 두 변수는 같은 객체를 가리킴  
+> 컴퓨터 과학에서는 자바스크립트의 원시값을 값 타입 ( value type) 이라고 말함. 원시 값을 전달할 때 값이 복사되기 때문. 객체는 참조타입(reference type)이라고 부름. 객체를 전달할 때 두 변수는 같은 객체를 가리킴
 
 
 # 매개변수가 함수를 결정하는가
@@ -167,9 +167,9 @@ console.log(getSentence(o)); // I love JavaScript*
 
 
 확산 연산자( … ) 를 써서 남는 매개변수를 이용할 수 있다.
-- - - -
-> 확산연산자 [추가 설명]  
-> es6에서 추가된 문법으로 ( … ) 을 사용해서 다중인수(함수호출) 또는 다중요소(문자배열)들이 예상되는 곳에서 확장될 수 있는 표현을 하게합니다.  
+---
+> 확산연산자 [추가 설명]
+> es6에서 추가된 문법으로 ( … ) 을 사용해서 다중인수(함수호출) 또는 다중요소(문자배열)들이 예상되는 곳에서 확장될 수 있는 표현을 하게합니다.
 
 ```javascript
 var parts = [‘shoulder’, ‘knees’];
@@ -180,7 +180,7 @@ var args = [0, 1, 2];
 f(...args);
 
 ```
-- - - -
+---
 
 ```javascript
 function addPrefix(prefix, …words){
@@ -251,10 +251,214 @@ o.speak()를 호출하면 this는 o에 묶인다.
 
 
 ### 같은 함수를 변수에 할당하면 어떻게 되나?
-![](comments-solid.png)
+[image:8486A3DF-9162-4B5F-BD88-EF0AFF894A42-270-00007F91555C3A1F/comments-solid.png]
 
 speak();
 함수를 이렇게 호출하면 자바스크립트는 이 함수가 어디에 속하는지 알 수 없으므로 this는 undefined에 묶인다.
 
-> 자바스크립트에서 함수의 this는 다른언어들과 조금 다르게 동작한다.  
-> 또한 strict mod(엄격 모드)인지 non-strict mod(비엄격 모드)인지도 동작에서 일부 차이가 있다. 대부분은 위에서 언급했듯 함수를 호출한 방법이 결정한다.  
+> 자바스크립트에서 함수의 this는 다른언어들과 조금 다르게 동작한다.
+> 또한 strict mod(엄격 모드)인지 non-strict mod(비엄격 모드)인지도 동작에서 일부 차이가 있다. 대부분은 위에서 언급했듯 함수를 호출한 방법이 결정한다.
+
+메서드라는 용어는 원래 객체지향 프로그래밍의 개념이지만, 이 글에서는 객체의 프로퍼티이며 o.speak()처럼 객체 인스턴스에서 호출할 의도로 만든 함수라는 뜻으로 사용합니다. 함수에서 this 를 사용하지 않으면 어디에서 선언했든 관계 없이 함수라고 부름.
+
+
+메서드안에 보조 함수가 있는 예제
+```javascript
+1.
+const o = {
+    name : 'Julie',
+    greetBackwards : function(){
+        function getReverseName(){
+            let nameBackwords ='';
+            for (let i=this.name.length-1; i>=0; i--){
+                nameBackwords += this.name[i];
+            }
+            return nameBackwords;
+        }
+        return `${getReverseName()} si eman ym, olleH`;
+    },
+};
+console.log(o.greetBackwards());
+------------------------------------------------------------
+2.
+const o ={
+    name :'Julie',
+    greetBackwards:function(){
+        const self = this;
+        function getReverseName(){
+            let nameBackwards = '';
+            for(let i=self.name.length-1; i>=0; i--){
+                nameBackwards += self.name[i];
+            }
+            return nameBackwards;
+        }
+        return `${getReverseName()} si eman ym, olleH`;
+    },
+};
+console.log(o.greetBackwards());
+
+```
+
+앞의 예제는 이름을 거꾸로 쓰고자 중첩된 함수 get ReverseName을 사용했다. 하지만 getReverseName 은 의도한 대로 동작하지 않는다. o.greetBackwards()를 호출하는 시점에서 자바스크립트는  this를 의도한대로 o에 연결하지만 , greetBackwards안에서 getReverseName을 호출하면 this 는 o 가 아닌 다른것에 묶인다. 이런문제를 해결하기 위해 다른변수에 this를 할당하는 것이 아래 예제 (2번)
+널리 쓰이는 방법이며 this를 self나 that에 할당하는 코드를 자주 볼 수 있다.
+
+# 함수 표현식과 익명 함수
+```javascript
+console.log(notHoisted) // undefined 
+//even the variable name is hoisted, the definition wasn't. so it's undefined.
+notHoisted(); // TypeError: notHoisted is not a function
+
+var notHoisted = function() {
+   console.log('bar');
+};
+```
+함수 표현식은 함수 선언과 다르게 끌어올려지지 않는다.
+정의전에는 사용할 수 없.
+함수를 선언하면 함수에 바디와 식별자가 모두 주어짐. 자바스크립트는 익명함수도 지원함. 익명함수는 식별자가 주어지지 않는다.
+
+아래는 함수 표현식을 쓰고 그 결과를 변수에 할당하는 예제.
+```javascript
+const f = function(){
+};
+```
+
+이는 지금 까지의 함수 선언과 같다. 식별자 f가 이 함수를 가리킨다. 차이는 먼저 함수 표현식으로 익명함수를 만들고 그 함수를 변수에 할당한 것.
+
+익명함수는 어디든지 쓸 수 있다. 다른 함수나 메서드의 매개변수로 넘길 수도 있고, 객체의 함수 프로퍼티가 될 수도 있다. 
+
+```javascript
+const g = function f(){
+}
+```
+
+이런식으로 함수를 만들면 이름 g에 우선순위가 있음. 그리고 함수 바깥에서 함수에 접근할때는 g를 써야하고 f로 접근하려하면 변수가 정의되지 않았다는 에러가 생김
+함수 내부에서는 f 를 써서 자신을 호출하고 외부에서는 g를 써서 호출함.
+
+# 화살표 표기법
+ES6에서 새로만든 화살표 표기법은 간단히 말해 function 이라는 단어와 중괄호 숫자를 줄이려고 고안된 단축 문법임. 
+화살표 함수에는 세 가지 단축 문법이 있음.
+	- function 을 생략해도됨
+	- 함수에 매개변수가 단 하나 뿐이라면 괄호( ) 도 생략할 수 있음
+	- 함수 바디가 표현식 하나라면 중괄호와 return 문도 생략할 수 있다
+
+화살표 함수는 항상 익명임. 화살표 함수도 변수에 할당할 수 는 있지만, function 키워드 처럼 이름 붙은 함수를 만들 수는 없다.
+ 
+```javascript
+const f1 = function () { return “hello”; }
+const f1 = () => “hello”;
+
+const f2 = function(name) { return `hello, ${name}!`;}
+const f2 = name => `hello, ${name}!`;
+
+const f3 = function(a,b){ return a + b; }
+const f3 = (a,b) => a+b;
+```
+
+화살표 함수는 this가 다른 변수와 마찬가지로 정적으로 (lexically ) 묶인다. 
+위는 내부 함수 안에서 this를 사용할 수 있다.
+
+```javascript
+const o = {
+    name : ‘Julie’,
+    greetBackwards : function(){
+        const getReverseName = () =>{
+            let nameBackwords =‘’;
+            for (let i=this.name.length-1; i>=0; i—){
+                nameBackwords += this.name[i];
+            }
+            return nameBackwords;
+        }
+        return `${getReverseName()} si eman ym, olleH`;
+    },
+};
+console.log(o.greetBackwards());
+
+```
+
+화살표 함수에는 일반적인 함수와 다른 점이 두 가지 더 있다. 화살표 함수는 객체 생성자로 사용할 수 없고, arguments 변수도 사용할 수 없다. 하지만 ES6에서 확산연산자가 생겼으니 argument 변수는 필요가 없긴 함.
+
+# call, apply, bind
+Call 메서드는 모든 함수에서 사용할 수 있으며 this 를 특정 값으로 지정할 수 있음.
+```javascript
+const bruce = { name : “Bruce”};
+const Madeline = { name : “Madeline”};
+
+*//이 함수는 어떤 객체에도 연결되지 않았지만 this를 사용*
+function greet(){
+    return `Hello, I'm ${this.name}`;
+}
+
+console.log(greet());
+console.log(greet.call(bruce));
+console.log(greet.call(Madeline));
+```
+
+결과
+```
+Hello, I'm undefined
+Hello, I'm Bruce
+Hello, I'm Madeline
+```
+
+함수를 호출하면서 call 을 사용하고 this로 사용할 객체를 넘기면 해당 함수가 주어진 객체의 메서드인 것처럼 사용할 수 있다. call의 첫 번째 매개변 수는 this 로 사용할 값이고, 매개 변수가 더 있으면 그 매개변수는 호출하는 함수로 전달됨.
+
+```javascript
+function update(birthYear, occupation){
+    this.birthYear = birthYear;
+    this.occupation = occupation;
+}
+
+update.call(bruce, 1949, 'singer');
+    //bruce는 이제 { name: "Bruce", birthYear:1949, occupation: "singer"}임
+
+```
+
+Apply 는 함수 매개변수를 처리하는 방법을 제외하면 call과 완전 같음. call은 일반적인 함수와 마찬가지로 매개변수를 직접 받지만 apply는 매개변수를 배열로 받음
+
+```javascript
+update.apply(bruce,[1955, “actor”]);
+//bruce 는 이제 {name : “Bruce”, birthYear: 19565, occupation: “actor”}
+```
+
+apply는 배열 요소를 함수 매개변수로 사용해야 할 때 유용함. apply 를 설명할 때 흔히 사용하는 예제는 배열의 최솟값과 최댓값을 구하는것. 자바스크립트의 내장 함수인 Math.min과 Math.max 는 매개변수를 받아 그중 최솟값과 최댓값을 각각 반환함. aplly를 사용하면 기존 배열을 이들 함수에 바로 넘길 수 있음.
+```javascript
+const arr = [2,3,-5,15,7];
+Math.min.apply(null, arr); // -5
+Math.max.apply(null, arr); // 15
+```
+
+this의 값에 null을 쓴 이유는 Math.min과 Math.max가  this와 관계없이 동작하기 때문임.
+
+
+
+```javascript
+const newBruce = [1940, “martial artist”];
+update.call(bruce, …newBruce); // apply(bruce, newBruce)  와 같음.
+Math.min(…arr);
+Math.max(…arr);
+```
+
+ES6의 확산 연산자( … ) 를 사용해도 apply와 같은 결과를 얻을 수 있음. update 메서드는 this 값이 중요하므로 call 을 사용해야 하지만, Math.min 같은건 this값이 뭐든 관계없으므로 확산연산자를 그대로 사용할 수 있음.
+
+this 의 값을 바꿀 수 있는 마지막함수는 bind.
+bind를 사용하면 함수의  this 값을 영구히  바꿀 수 있음. Update 메서드를 이리저리 옮기면서도 호출할 때 this 값은 항상 bruce가 되게끔, call이나 apply, 다른 bind와 함께 호출하더라도 this 값이 bruce가 되도록 하려면 bind를 사용함.
+
+```javascript
+const updateBruce = update.bind(bruce);
+
+updateBruce(1904, “actor”);
+//brcue는 이제 { name : “Bruce”, birthYear: 1904, occupation: “actor” }
+updateBruce(Madeline, 1274, “king”);
+//bruce는 이제 { name : “Bruce”, birthYear: 1274, occupation : “king” }
+//Madeline 은 변하지 않음.
+```
+
+bind는 함수의 동작을 영구적으로 바꾸므로 찾기 어려운 버그의 원인이 될 수 있다. bind를 사용한 함수는 call 이나 apply 다른 bind와 함께 사용할 수 없는 거나 마찬가지다. 함수를 여기저기서 call이나  apply로 호출해야하는  this값이 그에 맞춰 바뀌어야 하는 경우에 bind를 사용하면 문제가 생김. 
+
+bind에 매개변수를 넘기면 항상 그 매개변수를 받으며 호출되는 새 함수를 만드는 효과가 있음. 예를들어  bruce가 태어난 해를 항상 1949로 고정하지만, 직업은 자유롭게 바꿀 수 있는 업데이트 함수를 만드록 싶다면 다음과 같이 하면됨
+
+```javascript
+const updateBruce1949 = update.bind(bruce ,1949);
+updateBruce1949(“singer, songwriter”);
+//bruce는 이제 { name : “Bruce”, birthYear:1949, occupation: “singer. songwriter” } 
+```
