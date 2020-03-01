@@ -128,3 +128,26 @@ console.log(message);
 ```
 
 변수 secret 은 IIFE의 스코프안에서 안전하게 보호되며 외부에서 접근할 수 없다. IIFE는 함수이므로 무엇이든 반환할 수 있다. IIFE에서 배열이나 객체, 함수를 반환하는 경우도 무척 많다. 자신이 몇 번 호출됐는지 보고하는 함수를 생각해 보면 이함수가 몇번 호출됐는지 저장한 값을 외부에서는 절대 손댈 수 없다.
+
+```javascript
+const f = (function(){
+    let count = 0;
+    return function(){
+        return `I have been called ${++count} time(s)`;
+    }
+})();
+console.log(f()); 
+console.log(f());
+console.log(f());
+console.log(f());
+console.log(f());
+// I have been called 1 time(s)
+// I have been called 2 time(s)
+// I have been called 3 time(s)
+// I have been called 4 time(s)
+// I have been called 5 time(s)
+
+```
+
+변수 count는 IIFE안에 안전하게 보관되어 있으므로 손댈 방법이 없다. f는 자신이 몇번호출 되었는지 정확히 알고 있다.
+ES6에서 블록 스코프 변수를 도입하면서 IIFE가 필요한 경우가 줄어들긴 했지만 여전히 매우 널리 쓰인다. 클로저를 만들고 클로저에서 무언가 반환받을 때에는 유용하게 쓸 수 있다.
