@@ -19,7 +19,5 @@ arr.find(p =>p.id === juliet.id)
 
 //옵션 2: "this" 매개 변수를 이용하는 방법
 console.log(
-arr.find(() = p =>  {
-    return p.id === this.id
-},juliet)
+arr.find(function (p) {return p.id === this.id},juliet)
 );
