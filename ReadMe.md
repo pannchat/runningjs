@@ -1,3 +1,4 @@
+list : https://github.com/pannchat/runningjs/tree/master/public/es6
 # 변수선언
 let 변수명
 const 상수변수명
